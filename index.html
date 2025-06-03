@@ -2,18 +2,61 @@
 <html lang="en-US">
 <head>
     <meta charset="utf-8">
-    <title>Energy Justice Research - UM-Dearborn</title>
+    <title>Energy Access Research - UM-Dearborn</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore data tools and research on energy justice by the University of Michigan-Dearborn.">
+    <meta name="description" content="Explore data tools and research on energy access by the University of Michigan-Dearborn.">
+    <meta name="author" content="UM-Dearborn Energy Access Research Group">
+
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+            margin: 20px 0;
+            border: 1px solid #ccc;
+        }
+        #causeFilter {
+            padding: 6px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .report-panel {
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+    </style>
 </head>
 <body>
 
-<header>
-    <div  class="container">
-        <h1>UM-Dearborn Energy Justice</h1>
-        <nav>
+<header role="banner">
+    <div class="header">
+        <div class="header-div-logo">
+            <a href="index.html">
+                <img src="images/College/CECS/Horizontal/CECS_stationery_white.svg"
+                     alt="UM-Dearborn CECS Logo"
+                     height="54">
+            </a>
+        </div>
+        <nav role="navigation" aria-label="Main navigation">
             <ul>
+                <li><a href="#dashboard">About</a></li>
                 <li><a href="#dashboard">Dashboard</a></li>
                 <li><a href="#data-explorer">Data Explorer</a></li>
                 <li><a href="#research">Research</a></li>
@@ -21,12 +64,18 @@
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
+        <div class="header-div-search">
+            <form action="#" method="get" class="search-form" role="search" aria-label="Site search">
+                <input type="text" name="search" placeholder="Search..." class="search-input">
+                <button type="submit" class="search-button">Search</button>
+            </form>
+        </div>
     </div>
 </header>
 
 <section id="banner">
     <div class="container">
-        <h2>Energy Justice across the US</h2>
+        <h2>Energy Access across the US</h2>
         <p>Highlighting inequities in energy access, outages, and burden through research and interactive tools.</p>
     </div>
 </section>
@@ -36,7 +85,10 @@
         <div class="container">
             <h2>Beta Outage Impact Dashboard</h2>
             <p>Visualize how power outages affect communities across the country, focusing on vulnerable populations.</p>
-            <a href="https://umich.maps.arcgis.com/apps/webappviewer/index.html?id=769006f078af4a7caf32a3c84090af7e" target="_blank" rel="noopener noreferrer" class="button">Explore Dashboard </a>
+            <a href="https://umich.maps.arcgis.com/apps/webappviewer/index.html?id=769006f078af4a7caf32a3c84090af7e"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="button">Explore Dashboard</a>
         </div>
     </section>
 
@@ -44,15 +96,26 @@
         <div class="container">
             <h2>Data Explorer</h2>
             <p>Filter and analyze socio-economic and outage data by ZIP code, income, and more.</p>
-            <a href="#" class="button">Open Data Explorer</a>
+
+            <select id="causeFilter">
+                <option value="">All Causes</option>
+                <option value="Tree Limb">Tree Limb</option>
+                <option value="Storm Damage">Storm Damage</option>
+                <option value="Transformer Failure">Transformer Failure</option>
+                <option value="Unknown">Unknown</option>
+            </select>
+
+            <div id="map"></div>
+            <div id="report-panel" class="report-panel"></div>
+            <a href="pages/data-explorer.html" class="button" style="margin-top: 1rem;">Open Data Explorer</a>
         </div>
     </section>
 
     <section id="research">
         <div class="container">
             <h2>Our Research</h2>
-            <p>Discover UM-Dearborn's work on energy justice, including case studies on outage disparities and community resilience.</p>
-            <a href="#" class="button">Read Research Reports</a>
+            <p>Discover UM-Dearborn's work on energy Access, including case studies on outage disparities and community resilience.</p>
+            <a href="pages/our-research.html" class="button">Read Research Reports</a>
         </div>
     </section>
 
@@ -71,10 +134,83 @@
 <footer id="contact">
     <div class="container">
         <h3>Contact Us</h3>
-        <p>Email: <a href="mailto:energyjustice@umich.edu">energyjustice@umich.edu</a></p>
-        <p>© 2025 University of Michigan-Dearborn</p>
+        <p>Email: <a href="mailto:energyAccess@umich.edu">energyAccess@umich.edu</a></p>
+        <p>2025 University of Michigan-Dearborn</p>
     </div>
 </footer>
+
+<!-- Scripts -->
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const map = L.map('map').setView([39.5, -98.35], 5);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        const markerClusterGroup = L.markerClusterGroup();
+        let allData = [];
+
+        function updateMap(filterValue = "") {
+            markerClusterGroup.clearLayers();
+
+            allData.forEach(outage => {
+                const { OUTAGE_LATITUDE, OUTAGE_LONGITUDE, CITY, OUTAGE_CAUSE, EST_CUSTOMERS, CREW_CURRENT_STATUS } = outage;
+                if (!OUTAGE_LATITUDE || !OUTAGE_LONGITUDE) return;
+                if (filterValue && OUTAGE_CAUSE !== filterValue) return;
+
+                const causeColorMap = {
+                    "Tree Limb": "green",
+                    "Storm Damage": "blue",
+                    "Transformer Failure": "red",
+                    "Unknown": "gray"
+                };
+                const color = causeColorMap[OUTAGE_CAUSE] || "black";
+
+                const marker = L.circleMarker([OUTAGE_LATITUDE, OUTAGE_LONGITUDE], {
+                    radius: Math.max(5, Math.min(EST_CUSTOMERS / 2, 20)),
+                    color,
+                    fillColor: color,
+                    fillOpacity: 0.7,
+                    weight: 1
+                });
+
+                marker.on('click', () => {
+                    const reportHTML = `
+        <h3>Outage Report</h3>
+        <p><strong>Location:</strong> ${CITY || 'Unknown City'}</p>
+        <p><strong>Cause:</strong> ${OUTAGE_CAUSE}</p>
+        <p><strong>Crew Status:</strong> ${CREW_CURRENT_STATUS || 'Unknown'}</p>
+        <p><strong>Estimated Customers Affected:</strong> ${EST_CUSTOMERS}</p>
+        <p><strong>Coordinates:</strong> (${OUTAGE_LATITUDE.toFixed(4)}, ${OUTAGE_LONGITUDE.toFixed(4)})</p>
+    `;
+                    document.getElementById('report-panel').innerHTML = reportHTML;
+                });
+
+
+                markerClusterGroup.addLayer(marker);
+            });
+
+            map.addLayer(markerClusterGroup);
+        }
+
+        fetch('data/outages.json')
+            .then(res => res.json())
+            .then(data => {
+                allData = data;
+                updateMap();
+            })
+            .catch(err => console.error('Error loading outage data:', err));
+
+        document.getElementById('causeFilter').addEventListener('change', e => {
+            updateMap(e.target.value);
+        });
+    });
+</script>
 
 </body>
 </html>

@@ -30,16 +30,62 @@ body {
     padding: 20px 0;
 }
 
+#map {
+    height: 90vh;
+    width: 100%;
+}
+
 /* Header */
 header {
     background: var(--primary-blue);
     color: white;
     padding: 20px 0;
 }
+.header-div-logo, .header-lab-logo {
+    display: flex
+;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    justify-content: flex-start;
+    padding: 21.66px;
+}
+.header-div-search {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px 20px;
+    background-color: var(--primary-blue);
+}
 
-header h1 {
-    text-align: center;
-    margin-bottom: 10px;
+.search-form {
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+    outline: none;
+    color: var(--primary-blue);
+    background-color: var(--light-gray);
+}
+
+.search-button {
+    padding: 8px 12px;
+    background-color: var(--maize-yellow);
+    color: var(--primary-blue);
+    border: none;
+    border-radius: 0 4px 4px 0;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #e6b800;
 }
 
 header nav ul {
@@ -48,6 +94,7 @@ header nav ul {
     list-style: none;
     gap: 20px;
 }
+
 
 header nav a {
     color: white;
@@ -124,3 +171,11 @@ section ul {
 section ul li {
     margin-bottom: 10px;
 }
+#causeFilter {
+    margin: 10px 0;
+    padding: 6px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+

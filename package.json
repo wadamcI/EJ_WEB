@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/wadamcI/EJ_WEB#readme",
   "dependencies": {
-    "express": "^5.1.0"
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "openai": "^5.7.0",
+    "pg": "^8.16.2"
   }
 }

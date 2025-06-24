@@ -1,3 +1,4 @@
+console.log("✅ data-explorer.js loaded");
 document.addEventListener('DOMContentLoaded', () => {
     const map = L.map('map').setView([37.3, -121.8], 5);
 
@@ -10,55 +11,48 @@ document.addEventListener('DOMContentLoaded', () => {
     let allData = [];
 
     function updateMap(filterValue = "") {
+        console.log("✅ Calling updateMap with", allData.length, "features");
         markerClusterGroup.clearLayers();
 
         allData.forEach(outage => {
             const { geometry, properties } = outage;
-            if (!geometry || !geometry.coordinates) return;
+            let coords = geometry?.coordinates;
 
-            const { coordinates } = geometry;
-            const { CITY, OUTAGE_CAUSE, EST_CUSTOMERS, CREW_CURRENT_STATUS } = properties;
+            // If nested (e.g., [[lon, lat]]), unwrap it
+            if (Array.isArray(coords) && Array.isArray(coords[0])) {
+                coords = coords[0];
+            }
 
-            if (filterValue && OUTAGE_CAUSE !== filterValue) return;
 
-            const causeColorMap = {
-                "Tree Limb": "green",
-                "Storm Damage": "blue",
-                "Transformer Failure": "red",
-                "Unknown": "gray"
-            };
+            if (!Array.isArray(coords) || coords.length < 2 || typeof coords[0] !== 'number' || typeof coords[1] !== 'number') {
+                console.warn("⚠️ Invalid coordinates:", coords, "types:", typeof coords[0], typeof coords[1]);
+                return;
+            }
 
-            const color = causeColorMap[OUTAGE_CAUSE] || "black";
+            const [lon, lat] = coords;
+            console.log("📍 Adding marker at", lat, lon);
 
-            const marker = L.circleMarker([coordinates[1], coordinates[0]], {
-                radius: Math.max(5, Math.min((EST_CUSTOMERS || 1) / 2, 20)),
-                color,
-                fillColor: color,
-                fillOpacity: 0.7,
-                weight: 1
-            });
-
-            marker.on('click', () => {
-                const reportHTML = `
-                    <h3>Outage Report</h3>
-                    <p><strong>Location:</strong> ${CITY || 'Unknown City'}</p>
-                    <p><strong>Cause:</strong> ${OUTAGE_CAUSE}</p>
-                    <p><strong>Crew Status:</strong> ${CREW_CURRENT_STATUS || 'Unknown'}</p>
-                    <p><strong>Estimated Customers Affected:</strong> ${EST_CUSTOMERS}</p>
-                    <p><strong>Coordinates:</strong> (${coordinates[1].toFixed(4)}, ${coordinates[0].toFixed(4)})</p>
-                `;
-                document.getElementById('report-panel').innerHTML = reportHTML;
+            const marker = L.circleMarker([lat, lon], {
+                radius: 5,
+                color: "blue",
+                fillColor: "blue",
+                fillOpacity: 0.5
             });
 
             markerClusterGroup.addLayer(marker);
         });
 
         map.addLayer(markerClusterGroup);
+        map.invalidateSize();
+        console.log("🗺️ Added marker cluster to map");
     }
 
-    fetch('../data/outages.json')
+
+
+    fetch('/api/outages?start=2019-06-01&end=2019-06-12')
         .then(res => res.json())
         .then(data => {
+            console.log("✅ Fetched data:", data);
             allData = data.features || [];
             updateMap();
         })
@@ -69,21 +63,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function submitChat() {
+async function submitChat() {
     const input = document.getElementById('chatInput');
     const chatMessages = document.getElementById('chatMessages');
-
     const userMessage = input.value.trim();
     if (!userMessage) return;
 
-    const userBubble = `<div class="chat-bubble user">${userMessage}</div>`;
-    const assistantBubble = `<div class="chat-bubble assistant">I'm UM-D Power AI — here to help you understand your outage data.</div>`;
-
-    chatMessages.innerHTML += userBubble + assistantBubble;
-
+    chatMessages.innerHTML += `<div class="chat-bubble user">${userMessage}</div>`;
     input.value = "";
+
+    const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage })
+    });
+
+    const data = await res.json();
+    chatMessages.innerHTML += `<div class="chat-bubble assistant">${data.reply}</div>`;
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
+
 
 document.getElementById('chatInput').addEventListener('keydown', (event) => {
     if (event.key === 'Enter' && !event.shiftKey) {

@@ -3,33 +3,61 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>data-explorer</title>
+    <title>Data Explorer</title>
     <link rel="stylesheet" href="../styles.css" />
-    <link
-            rel="stylesheet"
-            href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-            crossorigin=""
-    />
-    <link
-            rel="stylesheet"
-            href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
-    />
-    <link
-            rel="stylesheet"
-            href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
-    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 </head>
 <body>
+
 <header>
-    <h1>Energy Outage Explorer</h1>
+    <h1><a href="../index.html" style="text-decoration: none; color: inherit;">Energy Outage Explorer</a></h1>
 </header>
 
-<main>
-    <div id="map"></div>
-</main>
+<section id="data-explorer">
+    <div class="container">
+        <h2>Data Explorer</h2>
+        <p>Filter and analyze socio-economic and outage data by ZIP code, income, and more.</p>
+
+        <select id="causeFilter">
+            <option value="">All Causes</option>
+            <option value="Tree Limb">Tree Limb</option>
+            <option value="Storm Damage">Storm Damage</option>
+            <option value="Transformer Failure">Transformer Failure</option>
+            <option value="Unknown">Unknown</option>
+        </select>
+
+        <div class="clearfix">
+            <div id="map"></div>
+            <div class="chat-box" id="chatBox">
+                <h3>Assistant</h3>
+                <div id="chatMessages" style="height: 480px; overflow-y: scroll; border: 1px solid #ddd; padding: 5px;"></div>
+                <textarea id="chatInput" placeholder="Ask a question about the data..."></textarea>
+                <button onclick="submitChat()">Send</button>
+            </div>
+        </div>
+
+        <div id="report-panel" class="report-panel"></div>
+    </div>
+
+</section>
+
+
 
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-<script src="scripts/map.js"></script>
+<script src="../js/data-explorer.js"></script>
+
+
 </body>
+
+<footer id="contact">
+    <div class="container">
+        <h3>Contact Us</h3>
+        <p>Email: <a href="mailto:energyAccess@umich.edu">energyAccess@umich.edu</a></p>
+        <p>2025 University of Michigan-Dearborn</p>
+    </div>
+</footer>
+
 </html>

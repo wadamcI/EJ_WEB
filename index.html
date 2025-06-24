@@ -92,24 +92,24 @@
         </div>
     </section>
 
-    <section id="data-explorer">
-        <div class="container">
-            <h2>Data Explorer</h2>
-            <p>Filter and analyze socio-economic and outage data by ZIP code, income, and more.</p>
+        <section id="data-explorer">
+            <div class="container">
+                <h2>Data Explorer</h2>
+                <p>Filter and analyze socio-economic and outage data by ZIP code, income, and more.</p>
 
-            <select id="causeFilter">
-                <option value="">All Causes</option>
-                <option value="Tree Limb">Tree Limb</option>
-                <option value="Storm Damage">Storm Damage</option>
-                <option value="Transformer Failure">Transformer Failure</option>
-                <option value="Unknown">Unknown</option>
-            </select>
+<!--                <select id="causeFilter">-->
+<!--                    <option value="">All Causes</option>-->
+<!--                    <option value="Tree Limb">Tree Limb</option>-->
+<!--                    <option value="Storm Damage">Storm Damage</option>-->
+<!--                    <option value="Transformer Failure">Transformer Failure</option>-->
+<!--                    <option value="Unknown">Unknown</option>-->
+<!--                </select>-->
 
-            <div id="map"></div>
-            <div id="report-panel" class="report-panel"></div>
-            <a href="pages/data-explorer.html" class="button" style="margin-top: 1rem;">Open Data Explorer</a>
-        </div>
-    </section>
+<!--                <div id="map"></div>-->
+<!--                <div id="r  eport-panel" class="report-panel"></div>-->
+                <a href="pages/data-explorer.html" class="button" style="margin-top: 1rem;">Open Data Explorer</a>
+            </div>
+        </section>
 
     <section id="research">
         <div class="container">
@@ -139,78 +139,6 @@
     </div>
 </footer>
 
-<!-- Scripts -->
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const map = L.map('map').setView([39.5, -98.35], 5);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-
-        const markerClusterGroup = L.markerClusterGroup();
-        let allData = [];
-
-        function updateMap(filterValue = "") {
-            markerClusterGroup.clearLayers();
-
-            allData.forEach(outage => {
-                const { OUTAGE_LATITUDE, OUTAGE_LONGITUDE, CITY, OUTAGE_CAUSE, EST_CUSTOMERS, CREW_CURRENT_STATUS } = outage;
-                if (!OUTAGE_LATITUDE || !OUTAGE_LONGITUDE) return;
-                if (filterValue && OUTAGE_CAUSE !== filterValue) return;
-
-                const causeColorMap = {
-                    "Tree Limb": "green",
-                    "Storm Damage": "blue",
-                    "Transformer Failure": "red",
-                    "Unknown": "gray"
-                };
-                const color = causeColorMap[OUTAGE_CAUSE] || "black";
-
-                const marker = L.circleMarker([OUTAGE_LATITUDE, OUTAGE_LONGITUDE], {
-                    radius: Math.max(5, Math.min(EST_CUSTOMERS / 2, 20)),
-                    color,
-                    fillColor: color,
-                    fillOpacity: 0.7,
-                    weight: 1
-                });
-
-                marker.on('click', () => {
-                    const reportHTML = `
-        <h3>Outage Report</h3>
-        <p><strong>Location:</strong> ${CITY || 'Unknown City'}</p>
-        <p><strong>Cause:</strong> ${OUTAGE_CAUSE}</p>
-        <p><strong>Crew Status:</strong> ${CREW_CURRENT_STATUS || 'Unknown'}</p>
-        <p><strong>Estimated Customers Affected:</strong> ${EST_CUSTOMERS}</p>
-        <p><strong>Coordinates:</strong> (${OUTAGE_LATITUDE.toFixed(4)}, ${OUTAGE_LONGITUDE.toFixed(4)})</p>
-    `;
-                    document.getElementById('report-panel').innerHTML = reportHTML;
-                });
-
-
-                markerClusterGroup.addLayer(marker);
-            });
-
-            map.addLayer(markerClusterGroup);
-        }
-
-        fetch('data/outages.json')
-            .then(res => res.json())
-            .then(data => {
-                allData = data;
-                updateMap();
-            })
-            .catch(err => console.error('Error loading outage data:', err));
-
-        document.getElementById('causeFilter').addEventListener('change', e => {
-            updateMap(e.target.value);
-        });
-    });
-</script>
 
 </body>
 </html>

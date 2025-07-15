@@ -363,22 +363,39 @@ You help users understand power outage and community data. Be friendly and clear
     }
 
     try {
-        const llmResponse = await openai.chat.completions.create({
-            model: "o3-mini",
-            messages: [
-                {
-                    role: "system",
-                    content: "Rewrite the following message to be clear, friendly, and easy to understand for the user. Keep all numbers & facts intact."
-                },
-                {role: "user", content: responseText}
-            ]
-        });
+        let reply = responseText;  // fallback if no metrics
 
-        const reply = llmResponse.choices[0].message.content.trim();
+        if (metrics && visualization) {
+            // LLM analyzes metrics
+            const llmResponse = await openai.chat.completions.create({
+                model: "gpt-4o",
+                messages: [
+                    {
+                        role: "system",
+                        content: `
+You are a data analyst helping common non trained users understand patterns, trends, and anomalies in power outage, socioeconomic, and weather data. 
+Given the following JSON metrics for selected ZIP codes, explain clearly and concisely what patterns you see, what stands out, and what might be actionable.
+If some values seem unusually high or low, call them out.
+Do not just repeat the numbers — analyze them and provide insight.
+`.trim()
+                    },
+                    {
+                        role: "user",
+                        content: JSON.stringify({ stage: state.stage, metrics })
+                    }
+                ]
+            });
 
-        history.push({role: "assistant", content: reply});
+            reply = llmResponse.choices[0].message.content.trim();
+        } else {
+            // No metrics, just tutorial text
+            reply = responseText;
+        }
 
-        res.json({reply, zips: state.zips, visualization, metrics});
+        history.push({ role: "assistant", content: reply });
+
+        res.json({ reply, zips: state.zips, visualization, metrics });
+
 
     } catch (err) {
         console.error("OpenAI Error:", err);

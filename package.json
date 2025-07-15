@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server/index.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,9 @@
   "dependencies": {
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "fetch": "^1.1.0",
+    "node-fetch": "^3.3.2",
+    "nouislider": "^15.8.1",
     "openai": "^5.7.0",
     "pg": "^8.16.2"
   }

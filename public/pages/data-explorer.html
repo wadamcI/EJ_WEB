@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Explorer</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/data-explorer.js"></script>
+
+</head>
+<body>
+
+<header>
+    <h1><a href="../index.html" style="text-decoration: none; color: inherit;">Energy Outage Explorer</a></h1>
+</header>
+
+<section id="data-explorer">
+    <div class="container">
+        <h2>Data Explorer</h2>
+        <p>Filter and analyze socio-economic and outage data by ZIP code, income, and more.</p>
+        <div>
+            <strong>From:</strong> <span id="event-start"></span>
+            <strong>To:</strong> <span id="event-end"></span>
+        </div>
+        <div id="slider"></div>
+        <div class="clearfix">
+            <div id="map"></div>
+            <div class="chat-box" id="chatBox">
+                <h3>Assistant</h3>
+                <div id="chatMessages" style="height: 480px; overflow-y: scroll; border: 1px solid #ddd; padding: 5px;">
+
+                </div>
+                <textarea id="chatInput" placeholder="Ask a question about the data..."></textarea>
+                <button onclick="submitChat()">Send</button>
+            </div>
+        </div>
+
+        <section id="visualization" style="display: none; margin-top: 20px;">
+            <h3>Data Visualization</h3>
+            <canvas id="chartCanvas" width="800" height="400"></canvas>
+        </section>
+
+
+        <div id="report-panel" class="report-panel"></div>
+    </div>
+
+</section>
+
+
+
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="../js/data-explorer.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+
+</body>
+
+<footer id="contact">
+    <div class="container">
+        <h3>Contact Us</h3>
+        <p>Email: <a href="mailto:energyAccess@umich.edu">energyAccess@umich.edu</a></p>
+        <p>2025 University of Michigan-Dearborn</p>
+    </div>
+</footer>
+
+</html>

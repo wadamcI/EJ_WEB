@@ -1,0 +1,348 @@
+/* =========================
+   General Reset & Variables
+   ========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-blue: #00274C;
+    --maize-yellow: #FFCB05;
+    --light-gray: #f5f5f5;
+    --dark-gray: #333;
+    --accent-blue: #0056b3;
+}
+
+/* =====================
+   Layout & Body
+   ===================== */
+body {
+    font-family: 'Arial', sans-serif;
+    color: var(--dark-gray);
+    background-color: white;
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px 0;
+}
+
+/* =====================
+   Header & Navigation
+   ===================== */
+header {
+    background: var(--primary-blue);
+    color: white;
+    padding: 20px 0;
+}
+
+.header-div-logo, .header-lab-logo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    justify-content: flex-start;
+    padding: 21.66px;
+}
+
+.header-div-search {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px 20px;
+    background-color: var(--primary-blue);
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+    outline: none;
+    color: var(--primary-blue);
+    background-color: var(--light-gray);
+}
+
+.search-button {
+    padding: 8px 12px;
+    background-color: var(--maize-yellow);
+    color: var(--primary-blue);
+    border: none;
+    border-radius: 0 4px 4px 0;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #e6b800;
+}
+
+header nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 20px;
+}
+
+header nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header nav a:hover {
+    text-decoration: underline;
+}
+
+/* =====================
+   Banner
+   ===================== */
+#banner {
+    background: var(--maize-yellow);
+    color: var(--primary-blue);
+    text-align: center;
+    padding: 60px 20px;
+}
+
+#banner h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+/* =====================
+   Sections
+   ===================== */
+section {
+    padding: 40px 0;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+section ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+section ul li {
+    margin-bottom: 10px;
+}
+
+#causeFilter {
+    margin: 10px 0;
+    padding: 6px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* =====================
+   Buttons
+   ===================== */
+.button {
+    display: inline-block;
+    background: var(--primary-blue);
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.button:hover {
+    background: var(--accent-blue);
+}
+
+/* =====================
+   Map & Layout
+   ===================== */
+.clearfix {
+    display: flex;
+    gap: 20px;
+    flex-wrap: nowrap;
+    transition: all 0.4s ease;
+}
+
+#map {
+    position: relative;
+    height: 600px;
+    width: 0;
+    opacity: 0;
+    transition: all 0.4s ease;
+    flex: 1;
+}
+
+#map.show {
+    width: 70%;
+    opacity: 1;
+    display: block;
+}
+
+/* =====================
+   Chat Box
+   ===================== */
+.chat-box {
+    position: relative;
+    float: right;
+    width: 100%;
+    height: 600px;
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #FFCB05;
+    border-radius: 8px;
+    padding: 10px;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.4s ease;
+}
+
+.chat-box.shrink {
+    width: 30%;
+}
+
+#chatMessages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.chat-box textarea {
+    width: 100%;
+    height: 60px;
+    resize: none;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 8px;
+    background: #f5f5f5;
+    color: #000;
+}
+
+.chat-box button {
+    background: #00274C;
+    color: #ffffff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: background 0.3s ease;
+}
+
+.chat-box button:hover {
+    background: #001f3f;
+}
+
+.chat-bubble.user {
+    background: #FFCB05;
+    color: #00274C;
+    padding: 6px 10px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    align-self: flex-end;
+    max-width: 80%;
+}
+
+.chat-bubble.assistant {
+    background: #e6e6e6;
+    color: #000;
+    padding: 6px 10px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    align-self: flex-start;
+    max-width: 80%;
+}
+
+/* =====================
+   Slider
+   ===================== */
+#slider {
+    position: relative;
+    height: 40px;
+    width: 0;
+    opacity: 0;
+    transition: all 0.4s ease;
+    margin-bottom: 10px;
+}
+
+#slider.show {
+    width: 70%;
+    opacity: 1;
+}
+
+/* =====================
+   Footer
+   ===================== */
+footer {
+    background: var(--primary-blue);
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+footer a {
+    color: var(--maize-yellow);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* =====================
+   Error Page
+   ===================== */
+.error-container {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.error-container h1 {
+    font-size: 5rem;
+    margin-bottom: 0.5rem;
+    color: #00274C;
+}
+
+.error-container h2 {
+    font-size: 2rem;
+    color: #00274C;
+    margin-bottom: 1rem;
+}
+
+.error-container p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.error-container a.button {
+    padding: 10px 20px;
+    background-color: #FFCB05;
+    color: #00274C;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.error-container a.button:hover {
+    background-color: #f0b900;
+}

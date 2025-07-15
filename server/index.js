@@ -23,9 +23,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // GeoJSON API for outage data
 app.get('/api/outages', async (req, res) => {
-    const { start = '1900-01-01', end = '2100-01-01', cause } = req.query;
+    const { start = '1900-01-01', end = '2100-01-01', cause, zips } = req.query;
 
-    const sql = `
+    let sql = `
         SELECT jsonb_build_object(
                        'type', 'FeatureCollection',
                        'features', jsonb_agg(
@@ -37,22 +37,38 @@ app.get('/api/outages', async (req, res) => {
                                    )
                ) AS geojson
         FROM outages_geojson o
-        WHERE datetime BETWEEN $1 AND $2 
+        WHERE datetime BETWEEN $1 AND $2
           AND wkb_geometry IS NOT NULL
-            ${cause ? "AND cause I LIKE $3" : ""}
     `;
-
     const values = [start, end];
-    if (cause) values.push(`%${cause}%`);
+
+    if (cause) {
+        sql += ` AND cause ILIKE $${values.length + 1}`;
+        values.push(`%${cause}%`);
+    }
+
+    if (zips) {
+        const zipArray = zips.split(',').map(z => z.trim());
+        sql += ` AND zip_code = ANY($${values.length + 1})`;
+        values.push(zipArray);
+    }
+
+    console.log(`📥 Params: ${JSON.stringify(values)}`);
 
     try {
         const result = await pool.query(sql, values);
-        res.json(result.rows[0].geojson || { type: 'FeatureCollection', features: [] });
+
+        if (!result.rows[0] || !result.rows[0].geojson || !result.rows[0].geojson.features) {
+            return res.json({ type: 'FeatureCollection', features: [] });
+        }
+
+        res.json(result.rows[0].geojson);
     } catch (err) {
-        console.error('DB query error:', err);
+        console.error('❌ DB query error:', err);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 // Date range API
 

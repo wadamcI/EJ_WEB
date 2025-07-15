@@ -290,6 +290,25 @@ section ul li {
     opacity: 1;
 }
 
+
+/* =====================
+   Visualizer
+   ===================== */
+
+#slideDots .dot {
+    height: 12px;
+    width: 12px;
+    margin: 0 4px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+#slideDots .dot.active {
+    background-color: #007bff;
+}
+
+
 /* =====================
    Footer
    ===================== */
@@ -346,3 +365,4 @@ footer a:hover {
 .error-container a.button:hover {
     background-color: #f0b900;
 }
+
